@@ -20,7 +20,7 @@ Open `http://localhost:4182`.
 - Tap or click any visible part of a sticker, or finish dragging it, to reveal **Save sticker** nearby. Download happens only when that text action is chosen and contains the isolated sticker on transparency.
 - **Pack it away** raises the sleeve from below, returns the stickers, then closes the paper header and seals the pack. Reduced-motion preferences use an immediate transition.
 
-No build step, dependencies, accounts, analytics or external runtime requests. All artwork stays local to the page, including export processing.
+No build step, accounts, analytics or external runtime requests. A locally vendored MIT-licensed Three.js renderer adds a shallow inflated film shell, irregular geometry-based folds, crimped edges and paper thickness; reflections follow the pack’s rotation. CSS packaging remains available if WebGL is unavailable. All artwork stays local to the page, including export processing.
 
 ## Artwork
 
