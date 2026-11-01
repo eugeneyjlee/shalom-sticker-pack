@@ -39,3 +39,11 @@ Touch scrolling follows the browser’s [Pointer Events gesture rules](https://w
 ## Shared-depth pouch preview
 
 The current material preview renders film, continuous curved side gussets, sticker fronts/backs and the printed paper header in one WebGL scene. The inflated body reaches roughly 115 px of depth, with a narrow clamped neck and cool-blue translucent reflections. DOM buttons retain the interactions and accessible names. A geometry audit pairs every triangle edge in the closed shell and checks all twenty sealed sticker quads against the film enclosure. This demonstrates enclosure under shared rigid rotation; it does not replace visual browser verification. Front/back, oblique and exact side-on screenshot review of this rebuild remains pending because the connected browser was unavailable.
+
+## Stability pass
+
+The camera clipping range is 500–3000 px rather than 1–4000 px. Twenty bounded sticker ranks use 0.25 px separation, centered inside the neck, instead of tiny 0.035 px gaps or unbounded drag offsets. Rank identity follows catalog and DOM stacking, independent of image decode order. A numeric depth check finds distinct 16/24-bit depth values over the working camera distances; the old 0.035 px gaps could map to the same 24-bit value. This addresses a code-level cause of z-fighting; actual flicker elimination still needs browser observation.
+
+The hidden repack button retains its layout slot, avoiding a flex recenter when sealing finishes. Opening cleanup timers are cancelled before repacking or a new cycle, and pointer dragging cancels the active sticker’s entrance transition. Repacking uses synchronized gathering and insertion with no per-sticker delay, resets stack order above the mouth, and settles to the original coordinates and pose. A transient handler harness passes repeated rotated/open/move/repack cycles, narrow placement and reduced-motion state checks.
+
+The context-only download action is a compact pearly pill with a generated resin-heart accent, soft chrome rim and keyboard focus indication. Ordinary click/drag remains quiet. Its visual appearance and browser/mobile interactions have not been verified during this pass because no browser surface was available.

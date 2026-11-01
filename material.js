@@ -6,7 +6,7 @@ try {
 const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true});
 renderer.setClearColor(0,0);renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
 renderer.domElement.className='pouch-material';renderer.domElement.setAttribute('aria-hidden','true');stage.append(renderer.domElement);
-const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(30,1,1,4000);camera.position.z=1600;
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(30,1,500,3000);camera.position.z=1600;
 const root=new THREE.Group();root.matrixAutoUpdate=false;scene.add(root);
 const shell=new THREE.Group();root.add(shell);
 const uniforms={fade:{value:1}};
@@ -84,22 +84,27 @@ async function printHeader(){const [title,charms]=await Promise.all([load('asset
 }
 printHeader().catch(error=>console.warn('Header artwork could not load.',error));
 const stickerMeshes=[];
-function createSticker(el){const image=el.querySelector('img');if(!image?.complete||!image.naturalWidth)return null;
+function createSticker(el,index){const image=el.querySelector('img');if(!image?.complete||!image.naturalWidth)return null;
  const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d'),s=Math.min(256/image.naturalWidth,256/image.naturalHeight);x.drawImage(image,(256-image.naturalWidth*s)/2,(256-image.naturalHeight*s)/2,image.naturalWidth*s,image.naturalHeight*s);
  const front=new THREE.MeshBasicMaterial({map:canvasTexture(c),alphaTest:.035,alphaToCoverage:true,side:THREE.FrontSide});
  x.globalCompositeOperation='source-in';const g=x.createLinearGradient(0,0,256,256);g.addColorStop(0,'#fffefc');g.addColorStop(1,'#e5e4f0');x.fillStyle=g;x.fillRect(0,0,256,256);
  const rear=new THREE.MeshBasicMaterial({map:canvasTexture(c),alphaTest:.035,alphaToCoverage:true,side:THREE.FrontSide});
  // CanvasTexture uploads lazily: give the front its own immutable source canvas.
  const frontCanvas=document.createElement('canvas');frontCanvas.width=frontCanvas.height=256;const fc=frontCanvas.getContext('2d');fc.drawImage(image,(256-image.naturalWidth*s)/2,(256-image.naturalHeight*s)/2,image.naturalWidth*s,image.naturalHeight*s);front.map.dispose();front.map=canvasTexture(frontCanvas);
- const group=new THREE.Group();group.matrixAutoUpdate=false;const a=new THREE.Mesh(new THREE.PlaneGeometry(104,104),front),b=new THREE.Mesh(a.geometry,rear);a.position.z=.55;b.position.z=-.55;b.rotation.y=Math.PI;group.add(a,b);root.add(group);return{el,group};
+ const group=new THREE.Group();group.matrixAutoUpdate=false;const a=new THREE.Mesh(new THREE.PlaneGeometry(104,104),front),b=new THREE.Mesh(a.geometry,rear);a.position.z=.55;b.position.z=-.55;b.rotation.y=Math.PI;group.add(a,b);root.add(group);return{el,group,index};
 }
 const flip=new THREE.Matrix4().makeScale(1,-1,1),matrix=new THREE.Matrix4();
 function resize(){const w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.fov=2*Math.atan(h/3200)*180/Math.PI;camera.updateProjectionMatrix();}new ResizeObserver(resize).observe(stage);resize();
 stage.classList.add('material-ready','scene-ready');
 function frame(){requestAnimationFrame(frame);if(document.hidden)return;
  const m=new DOMMatrix(getComputedStyle(pack).transform);matrix.fromArray(Array.from(m.toFloat64Array()));matrix.setPosition(0,0,0);root.matrix.copy(matrix).premultiply(flip).multiply(flip);
- if(stickerMeshes.length<20){for(const el of document.querySelectorAll('.sticker'))if(!stickerMeshes.some(s=>s.el===el)){const item=createSticker(el);if(item)stickerMeshes.push(item);}}
- stickerMeshes.forEach(({el,group},i)=>{const cs=getComputedStyle(el),sm=new DOMMatrix(cs.transform);matrix.fromArray(Array.from(sm.toFloat64Array()));matrix.setPosition(0,0,0);group.matrix.copy(matrix).premultiply(flip).multiply(flip);const lifted=pack.classList.contains('opened')&&!pack.classList.contains('gathering')&&Number(cs.zIndex)>0;const z=lifted?2+Number(cs.zIndex)*.025:i*.035;group.matrix.setPosition(-370+sm.m41+52,235-sm.m42-52,z);});
+ if(stickerMeshes.length<20){for(const [index,el] of [...document.querySelectorAll('.sticker')].entries())if(!stickerMeshes.some(s=>s.el===el)){const item=createSticker(el,index);if(item)stickerMeshes.push(item);}}
+ // Catalog identity never depends on image decode completion order. Rank matches DOM
+ // stacking, stays bounded through repeated drags, and has resolvable depth spacing.
+ const drawings=stickerMeshes.map(item=>({...item,cs:getComputedStyle(item.el)}));
+ const ordered=drawings.slice().sort((a,b)=>(Number(a.cs.zIndex)||0)-(Number(b.cs.zIndex)||0)||a.index-b.index);
+ const ranks=new Map(ordered.map((item,rank)=>[item.el,rank]));
+ drawings.forEach(({el,group,cs})=>{const sm=new DOMMatrix(cs.transform);matrix.fromArray(Array.from(sm.toFloat64Array()));matrix.setPosition(0,0,0);group.matrix.copy(matrix).premultiply(flip).multiply(flip);const z=(ranks.get(el)-9.5)*.25;group.matrix.setPosition(-370+sm.m41+52,235-sm.m42-52,z);});
  const f=getComputedStyle(document.querySelector('#plastic')),fm=new DOMMatrix(f.transform);shell.position.set(fm.m41,-fm.m42,fm.m43-23);uniforms.fade.value=f.visibility==='hidden'?0:Number(f.opacity);shell.visible=uniforms.fade.value>.001;lip.material.opacity=.65*uniforms.fade.value;
  gussets[0].visible=!pack.classList.contains('repacking')||pack.classList.contains('closing');
  const h=getComputedStyle(document.querySelector('#header')),hm=new DOMMatrix(h.transform);paper.position.set(hm.m41,180-hm.m42,hm.m43-6);paper.rotation.z=-Math.atan2(hm.m12,hm.m11);paper.visible=h.visibility!=='hidden'&&Number(h.opacity)>.001;paper.material.forEach(mat=>mat.opacity=Number(h.opacity));
