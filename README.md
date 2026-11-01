@@ -17,7 +17,7 @@ Open `http://localhost:4182`.
 - Drag the sealed pack to turn it around. Arrow keys rotate a focused pack; Home faces front.
 - Draw a long line across the seam in either direction to open. Focus the seam and press Enter or Space for a keyboard alternative.
 - Drag an opened sticker to arrange it. Arrow keys move; Shift + arrows rotate.
-- Tap or click a sticker to reveal **Save PNG**. The download contains only that isolated sticker on transparency; dragging does not trigger a save.
+- Tap or click any visible part of a sticker, or finish dragging it, to reveal **Save sticker** nearby. Download happens only when that text action is chosen and contains the isolated sticker on transparency.
 - **Pack it away** raises the sleeve from below, returns the stickers, then closes the paper header and seals the pack. Reduced-motion preferences use an immediate transition.
 
 No build step, dependencies, accounts, analytics or external runtime requests. All artwork stays local to the page, including export processing.
