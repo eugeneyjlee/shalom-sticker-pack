@@ -5,7 +5,9 @@ const PACK_W=740,PACK_H=470,STICKER=104;
 let opened=false,busy=false,ready=false,stroke=null,drag=null,turn=null,yaw=0,pitch=0,topLayer=8,selected=null,openPixels=160;
 const names=['Pink bow cat','Cool sunglasses cat','Sleepy blanket cat','Waving cat','Shark hoodie cat','Bashful cat','Curious star cat','Heart hugging cat','Stretching ribbon cat','Headphones cat','Strawberry boba cat','Duck raincoat cat','Astronaut cat','Cupcake baker cat','Party hat cat','Frog cap cat','Reading cat','Camera cat','Angel wings cat','Knitting cat'];
 const angles=[-19,12,-10,21,-16,8,-22,17,-8,13,-18,22,-14,6,18,-21,11,-9,19,-13];
-const sealed=names.map((_,i)=>{const row=Math.floor(i/7),col=i%7;return [20+col*98+(row===2?34:0)+Math.sin(i*7)*9,124+row*104+Math.sin(i*2.7)*17,angles[i]]});
+// Loose offset clusters: neighbouring die-cut edges overlap while faces remain clear.
+const sealedPositions=[[24,145],[90,166],[166,125],[251,165],[326,133],[413,158],[499,126],[595,153],[42,245],[119,222],[211,258],[292,217],[384,250],[465,218],[576,246],[76,333],[158,313],[292,337],[415,319],[552,335]];
+const sealed=sealedPositions.map(([x,y],i)=>[x,y,angles[i]]);
 function scale(){return parseFloat(getComputedStyle(pack).getPropertyValue('--pack-scale'))||1}
 function hideSave(){save.hidden=true;selected=null}
 function pose(){pack.style.setProperty('--yaw',yaw+'deg');pack.style.setProperty('--pitch',pitch+'deg');pack.style.setProperty('--roll',opened&&!busy?'0deg':'-3deg');const back=Math.cos(yaw*Math.PI/180)<0;seam.tabIndex=back?-1:0;seam.style.pointerEvents=back?'none':'';pack.setAttribute('aria-label',`Shalom ${back?'back':'front'}. Drag to turn, arrows rotate, Home faces front. Draw across the seam to open, or focus the seam and press Enter.`)}
