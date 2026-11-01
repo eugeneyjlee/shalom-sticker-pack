@@ -35,3 +35,7 @@ The landscape edition was checked with actual seam drawing, keyboard opening, ro
 The context-menu and top-entry update passes syntax/whitespace review and a transient Node handler check covering quiet tap/drag, context actions, hold cancellation, keyboard menu access, repack phase order and exact final sticker poses. Actual browser interaction, touch long-press and fresh PNG verification for this update remain pending because the connected browser/native surfaces were unavailable during implementation.
 
 Touch scrolling follows the browser’s [Pointer Events gesture rules](https://www.w3.org/TR/pointerevents/); a native pan cancels the app drag and pending hold.
+
+## Shared-depth pouch preview
+
+The current material preview renders film, continuous curved side gussets, sticker fronts/backs and the printed paper header in one WebGL scene. The inflated body reaches roughly 115 px of depth, with a narrow clamped neck and cool-blue translucent reflections. DOM buttons retain the interactions and accessible names. A geometry audit pairs every triangle edge in the closed shell and checks all twenty sealed sticker quads against the film enclosure. This demonstrates enclosure under shared rigid rotation; it does not replace visual browser verification. Front/back, oblique and exact side-on screenshot review of this rebuild remains pending because the connected browser was unavailable.

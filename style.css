@@ -20,3 +20,8 @@
 #sticker-menu[hidden]{display:none}#sticker-menu #save-sticker{position:static;display:block;width:100%;min-height:44px;padding:10px 12px;text-align:left;text-decoration:none;cursor:pointer}
 #pack.opened,#pack.opened .sticker{touch-action:pan-y pinch-zoom}.opened .sticker{-webkit-touch-callout:none}
 .gathering .sticker{pointer-events:none}.gathering #header{visibility:hidden}.repacking #plastic:after{display:block;top:-5px;bottom:auto;left:1px;right:1px;width:auto;height:11px;border:1px solid #ffffffd9;border-bottom-color:#b3a1c578;border-radius:50%;background:#f9f3ff33;box-shadow:0 2px 4px #8974971c;transform:none;opacity:.9}
+/* Sealed/open artwork and film share one WebGL depth buffer; DOM is hit targets only. */
+.scene-ready .sticker img,.scene-ready .sticker .shine,.scene-ready #reverse-stickers,.scene-ready #glints{visibility:hidden}
+.scene-ready #header,.scene-ready .reverse-header{clip-path:inset(50%)}
+.scene-ready .film:after,.scene-ready .film:before{display:none!important}
+body.keyboard-navigation .scene-ready .sticker:focus-visible:after{content:'';position:absolute;inset:0;background:#eedfff55;mask-image:var(--cutout);mask-size:contain;mask-repeat:no-repeat;mask-position:center;filter:drop-shadow(0 0 4px #9b74b9);pointer-events:none}
